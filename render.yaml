@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: car-price-prediction
+    env: python
+    buildCommand: pip install -r requirements-prod.txt
+    startCommand: gunicorn app:app
+    runtime: python-3.10
