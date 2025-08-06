@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Car Price Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Used Car Price Predictor</h1>
+        <form action="/predict" method="post">
+            <div class="form-group">
+                <label for="brand">Brand:</label>
+                <input type="text" id="brand" name="brand" value="{{ form_data.brand if form_data else '' }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="model">Model:</label>
+                <input type="text" id="model" name="model" value="{{ form_data.model if form_data else '' }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="model_year">Model Year:</label>
+                <input type="number" id="model_year" name="model_year" 
+                       min="1990" max="{{ current_year }}" 
+                       value="{{ form_data.model_year if form_data else current_year - 3 }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="milage">Mileage (mi):</label>
+                <input type="number" id="milage" name="milage" 
+                       placeholder="e.g. 45000" min="0" step="1"
+                       value="{{ form_data.milage if form_data else '' }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="fuel_type">Fuel Type:</label>
+                <select id="fuel_type" name="fuel_type" required>
+                    <option value="Gasoline" {% if form_data and form_data.fuel_type == 'Gasoline' %}selected{% endif %}>Gasoline</option>
+                    <option value="Diesel" {% if form_data and form_data.fuel_type == 'Diesel' %}selected{% endif %}>Diesel</option>
+                    <option value="Hybrid" {% if form_data and form_data.fuel_type == 'Hybrid' %}selected{% endif %}>Hybrid</option>
+                    <option value="E85 Flex Fuel" {% if form_data and form_data.fuel_type == 'E85 Flex Fuel' %}selected{% endif %}>E85 Flex Fuel</option>
+                    <option value="Plug-In Hybrid" {% if form_data and form_data.fuel_type == 'Plug-In Hybrid' %}selected{% endif %}>Plug-In Hybrid</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="engine">Engine Info:</label>
+                <input type="text" id="engine" name="engine" 
+                       placeholder="e.g. 2.5L 4-Cylinder Gasoline 203HP" 
+                       value="{{ form_data.engine if form_data else '' }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="transmission">Transmission:</label>
+                <input type="text" id="transmission" name="transmission" 
+                       placeholder="e.g. 8-Speed Automatic" 
+                       value="{{ form_data.transmission if form_data else '' }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="ext_col">Exterior Color:</label>
+                <input type="text" id="ext_col" name="ext_col" 
+                       placeholder="e.g. Pearl White" 
+                       value="{{ form_data.ext_col if form_data else '' }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="int_col">Interior Color:</label>
+                <input type="text" id="int_col" name="int_col" 
+                       placeholder="e.g. Black" 
+                       value="{{ form_data.int_col if form_data else '' }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="clean_title">Clean Title:</label>
+                <select id="clean_title" name="clean_title">
+                    <option value="Yes" {% if form_data and form_data.clean_title == 'Yes' %}selected{% endif %}>Yes</option>
+                    <option value="No" {% if not form_data or form_data.clean_title == 'No' %}selected{% endif %}>No</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="accident">Accident History:</label>
+                <select id="accident" name="accident">
+                    <option value="None reported" {% if not form_data or form_data.accident == 'None reported' %}selected{% endif %}>None reported</option>
+                    <option value="At least 1 accident or damage reported" {% if form_data and form_data.accident == 'At least 1 accident or damage reported' %}selected{% endif %}>At least 1 accident</option>
+                </select>
+            </div>
+            
+            <button type="submit">Predict Price</button>
+        </form>
+        
+        {% if prediction_text %}
+        <div class="prediction">
+            {{ prediction_text }}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
